@@ -11,17 +11,11 @@
 int execute_command(char **argv, char *shell_name, unsigned int line_count)
 {
 	pid_t pid;
-	int status;
+	
+	(void)line_count;
 
 	if (argv[0] == NULL)
 		return (-1); /* do nothing if command is empty */
-
-	if (access(argv[0], X_OK) == -1)
-	{
-		fprintf(stderr, "%s: %u: %s: not found\n",
-			shell_name, line_count, argv[0]); /* print error message */
-		return (-1);
-	}
 
 	pid = fork(); /* create child process */
 	if (pid == -1)
@@ -32,16 +26,16 @@ int execute_command(char **argv, char *shell_name, unsigned int line_count)
 
 	if (pid == 0)
 	{
-		execve(argv[0], argv, environ); /* execute command in child */
-		perror(shell_name); /* print error if execve fails */
-		exit(EXIT_FAILURE); /* exit child process on failure */
+		if (execve(argv[0], argv, environ) == -1)
+		{
+			fprintf(stderr, "%s: No such file or directory\n",
+					shell_name); /* print error message */
+			exit(127);
+		}
 	}
-
-	if (waitpid(pid, &status, 0) == -1)
+	else
 	{
-		perror("waitpid"); /* print error if waitpid fails */
-		return (-1);
+		wait(NULL);
 	}
-
 	return (0);
 }
