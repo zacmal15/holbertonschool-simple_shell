@@ -14,5 +14,6 @@ extern char **environ;
 void print_prompt(void);
 void remove_newline(char *line);
 int execute_command(char *command. char *shell_name, unsigned int line_count);
+void handle_eof(char *line, int interactive);
 
 #endif
