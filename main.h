@@ -10,10 +10,9 @@
 extern char **environ;
 
 void print_prompt(void);
-char *clean_input(char *line);
 void handle_eof(char *line, int interactive);
+void clean_input(char *line);
 int parse_input(char *line, char **argv);
 int execute_command(char **argv, char *shell_name, unsigned int line_count);
-int main(int ac, char **av);
 
 #endif
