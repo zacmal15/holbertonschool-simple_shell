@@ -12,6 +12,7 @@ extern char **environ;
 void print_prompt(void);
 char *clean_input(char *line);
 void handle_eof(char *line, int interactive);
-int execute_command(char *command, char *shell_name, unsigned int line_count);
+int parse_input(char *line, char **argv);
+int execute_command(char **argv, char *shell_name, unsigned int line_count);
 
 #endif
