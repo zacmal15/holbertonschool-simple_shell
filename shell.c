@@ -8,19 +8,38 @@
 void print_prompt(void)
 {
 	printf("($) "); /* display shell prompt */
-	fflush(stdout); /* force prompt to appear immediately */
+	fflush(stdout); /* force prompt to show immediately */
 }
 
 /**
- * remove_newline - removes the newline character from input
- * @line: pointer to the input string
+ * clean_input - removes newline and surrounding spaces from input
+ * @line: pointer to input string
  *
- * Return: nothing
+ * Return: pointer to cleaned command
  */
-void remove_newline(char *line)
+char *clean_input(char *line)
 {
-	if (line != NULL)
-		line[strcspn(line, "\n")] = '\0'; /* replace newline with null */
+	char *start;
+	int end;
+
+	if (line == NULL)
+		return (NULL);
+
+	line[strcspn(line, "\n")] = '\0'; /* remove trailing newline */
+	start = line; /* start at beginning of string */
+
+	while (*start == ' ' || *start == '\t')
+		start++; /* skip leading spaces and tabs */
+
+	end = strlen(start) - 1; /* get index of last character */
+
+	while (end >= 0 && (start[end] == ' ' || start[end] == '\t'))
+	{
+		start[end] = '\0'; /* remove trailing spaces and tabs */
+		end--;
+	}
+
+	return (start);
 }
 
 /**
@@ -54,7 +73,7 @@ int execute_command(char *command, char *shell_name, unsigned int line_count)
 	char *argv[2];
 
 	argv[0] = command; /* first argument is the command itself */
-	argv[1] = NULL; /* argument array must end with NULL */
+	argv[1] = NULL; /* argument list must end with NULL */
 
 	if (access(command, X_OK) == -1)
 	{
@@ -67,7 +86,7 @@ int execute_command(char *command, char *shell_name, unsigned int line_count)
 
 	if (pid == -1)
 	{
-		perror("fork"); /* print fork error */
+		perror("fork"); /* print error if fork fails */
 		return (-1);
 	}
 
@@ -75,15 +94,15 @@ int execute_command(char *command, char *shell_name, unsigned int line_count)
 	{
 		if (execve(command, argv, environ) == -1)
 		{
-			perror(shell_name); /* print execve error */
-			exit(EXIT_FAILURE); /* exit child process on failure */
+			perror(shell_name); /* print error if execve fails */
+			exit(EXIT_FAILURE); /* exit child process */
 		}
 	}
 	else
 	{
 		if (wait(&status) == -1)
 		{
-			perror("wait"); /* print wait error */
+			perror("wait"); /* print error if wait fails */
 			return (-1);
 		}
 	}
@@ -101,33 +120,34 @@ int execute_command(char *command, char *shell_name, unsigned int line_count)
 int main(int ac, char **av)
 {
 	char *line;
+	char *command;
 	size_t len;
 	ssize_t read_chars;
 	unsigned int line_count;
 	int interactive;
 
 	(void)ac; /* avoid unused parameter warning */
-	line = NULL; /* initialize line pointer */
-	len = 0; /* initialize buffer size */
+	line = NULL; /* initialize getline buffer */
+	len = 0; /* initialize getline size */
 	line_count = 0; /* initialize command counter */
 	interactive = isatty(STDIN_FILENO); /* check interactive mode */
 
 	while (1)
 	{
 		if (interactive)
-			print_prompt(); /* print prompt in interactive mode */
+			print_prompt(); /* print prompt only in terminal mode */
 
-		read_chars = getline(&line, &len, stdin); /* read input line */
+		read_chars = getline(&line, &len, stdin); /* read user input */
 
 		if (read_chars == -1)
 			handle_eof(line, interactive);
 
-		line_count++; /* count command lines */
-		remove_newline(line); /* remove trailing newline */
+		line_count++; /* increase command counter */
+		command = clean_input(line); /* clean spaces and newline */
 
-		if (line[0] == '\0')
-			continue; /* skip empty lines */
+		if (command[0] == '\0')
+			continue; /* skip empty or spaces-only lines */
 
-		execute_command(line, av[0], line_count); /* run command */
+		execute_command(command, av[0], line_count); /* run command */
 	}
 }
