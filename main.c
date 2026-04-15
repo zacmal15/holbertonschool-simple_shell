@@ -9,12 +9,11 @@
  */
 int main(int ac, char **av)
 {
-	char *line;
-	char *args[64];
+	char *line, *args[64];
 	size_t len;
 	ssize_t read_chars;
 	unsigned int line_count;
-	int interactive;
+	int interactive, c127;
 
 	(void)ac; /* avoid unused parameter warning */
 	line = NULL; /* initialize getline buffer */
@@ -37,6 +36,7 @@ int main(int ac, char **av)
 		if (parse_input(line, args) == 0)
 			continue; /* skip empty lines */
 
-		execute_command(args, av[0], line_count); /* execute command */
+		c127 = execute_command(args, av[0], line_count); /* execute command */
+		(void)c127; /* ensures returner isnt 127 and command found */
 	}
 }
