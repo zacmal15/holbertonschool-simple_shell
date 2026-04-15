@@ -15,7 +15,7 @@ int parse_input(char *line, char **argv)
 	i = 0;
 	token = strtok(line, " \t"); /* get first token using space and tab */
 
-	while (token != NULL)
+	while (token != NULL && i < 63)
 	{
 		argv[i] = token; /* store token in argument array */
 		i++;
