@@ -47,5 +47,5 @@ int execute_command(char **argv, char *shell_name, unsigned int line_count)
 	}
 	waitpid(pid, &status, 0);
 	free(comm_path); /* always free your slaves */
-	return (WEXITSTATUS(status));
+	return (WEXITSTATUS(status)); /* extracts what the exit code is */
 }
