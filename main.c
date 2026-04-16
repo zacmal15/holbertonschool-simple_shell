@@ -2,25 +2,21 @@
 
 /**
  * main - entry point of the simple shell
- * @ac: argument count
- * @av: argument vector
+ * @argc: argument count
+ * @argv: argument vector
  *
  * Return: Always 0
  */
-int main(int ac, char **av)
+int main(int argc, char **argv)
 {
-	char *line, *args[64];
-	size_t len;
+	char *line = NULL /* getline buffer */, *args[64];
+	size_t len = 0; /* buffer size */
 	ssize_t read_chars;
-	unsigned int line_count;
-	int interactive;
-	int status = 0; /* store last command status */
+	unsigned int line_count = 0; /* command count */
+	int interactive = isatty(STDIN_FILENO); /* check interactive mode */
+	int status = 0;/* store last command status */
 
-	(void)ac; /* avoid unused parameter warning */
-	line = NULL; /* initialize getline buffer */
-	len = 0; /* initialize buffer size */
-	line_count = 0; /* initialize command counter */
-	interactive = isatty(STDIN_FILENO); /* check interactive mode */
+	(void)argc; /* unused parameter but argv needs a friend */
 
 	while (1)
 	{
@@ -40,6 +36,6 @@ int main(int ac, char **av)
 		if (parse_input(line, args) == 0)
 			continue; /* skip empty lines */
 
-		status = execute_command(args, av[0], line_count); /* execute command */
+		status = execute_command(args, argv[0], line_count); /* execute command */
 	}
 }
