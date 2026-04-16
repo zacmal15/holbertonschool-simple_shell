@@ -48,3 +48,32 @@ Notable line is:
 extern char **environ
 ```
 which programs acces to the process environment list.
+
+### main.c
+
+Contains the infinite loop which prints the prompt:
+```
+(good_boy$)  
+```
+because whoever types is very obedient and i guess the shell is too.
+
+Function then reads the line inputted, counts the line, performs some cleanup and asks the child to execute the function. All being well, the child is killed and we return to the _goodboy$_ prompt.
+
+### shell.c
+
+This file has the **execute_command()** function.
+
+Here we create the PID, fork children and wait for them to die. Errors are returned if the fork fails, commands arent found or the PID = 0. **waitpid()** is used to stop the parent from running new commands and we get returned the exit code, or 1 if the child is killed abnormally.
+
+### parser.c
+
+Splits the input into commands and arguments. we use **strtok()** to separate elements into an array. for example if we type
+> ls -l -t
+it splits into 3 elements in an array, plus a null terminator
+```
+line[0] = "ls"
+line[1] = "-l"
+line[2] = "-t"
+line[3] = "/0"
+```
+
