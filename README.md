@@ -57,7 +57,7 @@ Contains the infinite loop which prints the prompt:
 ```
 because whoever types is very obedient and i guess the shell is too.
 
-Function then reads the line inputted, counts the line, performs some cleanup and asks the child to execute the function. All being well, the child is killed and we return to the _goodboy$_ prompt.
+Function then reads the line inputted, counts the line, performs some cleanup and asks the child to execute the function. All being well, the child is killed and we return to the _good\_boy$_ prompt.
 
 ### shell.c
 
@@ -68,12 +68,38 @@ Here we create the PID, fork children and wait for them to die. Errors are retur
 ### parser.c
 
 Splits the input into commands and arguments. we use **strtok()** to separate elements into an array. for example if we type
-> ls -l -t
+```
+ls -l -t
+```
 it splits into 3 elements in an array, plus a null terminator
 ```
-line[0] = "ls"
-line[1] = "-l"
-line[2] = "-t"
-line[3] = "/0"
+argv[0] = "ls"
+argv[1] = "-l"
+argv[2] = "-t"
+argv[3] = "/0"
 ```
+### utils.c
+This contains useful functions to print the prompt, handle the end of file confition (maybe not used) and to clean\_input to remove newline from the input string by replacing with a null byte.
 
+###find\_command.c
+First function gets the path from the environment by strncmp to PATH=.
+
+find\_command first checks for a direct path case with '/' and then duplicates if it exists.
+
+If not, getpath is ran to locate the **PATH** inside the environment and copys this path.
+
+**strtok()** is used again to split into directories per colon ie:
+```
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin
+```
+will split into:
+```
+/usr/local/sbin
+/usr/local/bin
+/usr/sbin
+```
+memory is allocated for the tokens and the original command plus more for the null byte.
+
+If it all works proper, the full path is returned and confirms that the command exists on the path.
+
+## Going through each task
