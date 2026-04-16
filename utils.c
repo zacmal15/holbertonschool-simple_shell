@@ -7,7 +7,7 @@
  */
 void print_prompt(void)
 {
-	printf("($) "); /* display shell prompt */
+	printf("(good_boy$) "); /* display shell prompt */
 	fflush(stdout); /* force prompt to appear immediately */
 }
 
