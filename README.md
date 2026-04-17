@@ -59,12 +59,6 @@ because whoever types is very obedient and i guess the shell is too.
 
 Function then reads the line inputted, counts the line, performs some cleanup and asks the child to execute the function. All being well, the child is killed and we return to the _good\_boy$_ prompt.
 
-This file also contains the built-in exit, etc:
-```
-(good_boy$) exit
-```
-This command should exit the interactive shell mode.
-
 ### shell.c
 
 This file has the **execute_command()** function.
@@ -86,6 +80,25 @@ argv[3] = "/0"
 ```
 ### utils.c
 This contains useful functions to print the prompt, handle the end of file confition (maybe not used) and to clean\_input to remove newline from the input string by replacing with a null byte.
+
+### builtins.c
+This file contains the built-in functions such as printing the environment, and exiting the shell.
+
+This file contains the built-in function for printing the current environment, etc:
+```
+(good_boy$) env
+```
+Output should be:
+```
+PATH=/usr/bin:/bin
+HOME=/home/user
+USER=user
+...
+This file also contains the built-in exit, etc:
+```
+(good_boy$) exit
+```
+This command should exit the interactive shell mode.
 
 ### find\_command.c
 First function gets the path from the environment by strncmp to PATH=.
