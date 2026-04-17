@@ -6,7 +6,7 @@
  * @shell_name: name of the shell program
  * @line_count: current command line number
  *
- * Return: 0 on success, -1 on failure
+ * Return: child exit status, 127 if command is not found, 1 on failure
  */
 int execute_command(char **argv, char *shell_name, unsigned int line_count)
 {
@@ -18,14 +18,14 @@ int execute_command(char **argv, char *shell_name, unsigned int line_count)
 		return (0);
 
 	/**
-	 * to not call fork if command doesnt exists, have to place
-	 * command checker here and return -1 so nothing gets forked
+	 * to not call fork if command doesnt exist, have to place
+	 * command checker here and return 127 so nothing gets forked
 	 */
 	comm_path = find_command(argv[0]);
 	if (comm_path == NULL)
 	{
 		fprintf(stderr, "%s: %u: %s: not found\n",
-				shell_name, line_count, argv[0]);
+			shell_name, line_count, argv[0]);
 		return (127);
 	}
 
@@ -36,17 +36,21 @@ int execute_command(char **argv, char *shell_name, unsigned int line_count)
 		free(comm_path);
 		return (1);
 	}
+
 	if (pid == 0)
 	{
 		execve(comm_path, argv, environ);
 		free(comm_path);
-		fprintf(stderr, "%s: %u: %s; not found\n",
-				shell_name, line_count, argv[0]);
+		fprintf(stderr, "%s: %u: %s: not found\n",
+			shell_name, line_count, argv[0]);
 		exit(127);
 	}
-	waitpid(pid, &status, 0); /* status stores the exit code if exit normal */
+
+	waitpid(pid, &status, 0); /* status stores exit code if child exits normally */
 	free(comm_path);
+
 	if (WIFEXITED(status))
-		return (WEXITSTATUS(status)); /* extracts what the exit code is */
-	return (1); /* shows up an error if WIFEXITED doesnt work */
+		return (WEXITSTATUS(status)); /* extract child's exit code */
+
+	return (1); /* return error if child did not exit normally */
 }

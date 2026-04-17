@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 		if (strcmp(args[0], "exit") == 0)
 		{
 			free(line); /* free allocated memory */
-			exit(0); /* exit shell */
+			exit(status); /* exit shell */
 		}
 
 		status = execute_command(args, argv[0], line_count); /* execute command */
