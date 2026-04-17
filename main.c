@@ -9,12 +9,12 @@
  */
 int main(int argc, char **argv)
 {
-	char *line = NULL /* getline buffer */, *args[64];
+	char *line = NULL, *args[64]; /* getline buffer */
 	size_t len = 0; /* buffer size */
 	ssize_t read_chars;
 	unsigned int line_count = 0; /* command count */
 	int interactive = isatty(STDIN_FILENO); /* check interactive mode */
-	int status = 0;/* store last command status */
+	int status = 0; /* store last command status */
 
 	(void)argc; /* unused parameter but argv needs a friend */
 
@@ -35,6 +35,13 @@ int main(int argc, char **argv)
 
 		if (parse_input(line, args) == 0)
 			continue; /* skip empty lines */
+
+		/* built-in: exit */
+		if (strcmp(args[0], "exit") == 0)
+		{
+			free(line); /* free allocated memory */
+			exit(0); /* exit shell */
+		}
 
 		status = execute_command(args, argv[0], line_count); /* execute command */
 	}
