@@ -25,10 +25,7 @@ int main(int argc, char **argv)
 
 		read_chars = getline(&line, &len, stdin); /* read input line */
 		if (read_chars == -1)
-		{
-			free(line);
-			exit(status); /* exit with last command status */
-		}
+			shell_exit(line, status); /* handle EOF and exit */
 
 		line_count++; /* count every input line */
 		clean_input(line); /* remove trailing newline */
@@ -38,11 +35,17 @@ int main(int argc, char **argv)
 
 		/* built-in: exit */
 		if (strcmp(args[0], "exit") == 0)
+			shell_exit(line, status);
+
+		/* built-in: env */
+		if (strcmp(args[0], "env") == 0)
 		{
-			free(line); /* free allocated memory */
-			exit(status); /* exit shell */
+			print_env(); /* print environment variables */
+			continue;
 		}
 
-		status = execute_command(args, argv[0], line_count); /* execute command */
+		status = execute_command(args, argv[0], line_count);
 	}
+
+	return (0);
 }
