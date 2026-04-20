@@ -122,4 +122,63 @@ memory is allocated for the tokens and the original command plus more for the nu
 
 If it all works proper, the full path is returned and confirms that the command exists on the path.
 
-## Going through each task
+## Using our shell
+### Parentel Guidance
+Upon compiling the code, when you run the executable, the user will be greeted with the prompt
+```
+(good_boy$)
+```
+which comes from the infinite loop where interactive mode is initiated with the command
+```
+isatty(STDIN_FILENO)
+```
+The user, who we will refer to from now on as "the good boy", can input basic commands in a direct path form:
+```
+/bin/ls
+```
+or as arguments:
+```
+ls -l
+```
+The input will be read and the input line counted, and the parser tokenises the input as explained above.
+
+If the input is a builtin, we handle this in the parent before they fork to make babies.
+
+### A child has been forked
+The shell is now ready to execute the command.
+
+The code checks checks if the command exists. If not, the shells spits back at the good boy with an error message and a child isnt forked.
+
+If the command is real, then we can start the child process with:
+```
+pid = fork()
+```
+The PID simply differentiates between processes by assigning a unique ID to each program so if you run the same command 10 times, each iteration will habe its own PID.
+
+If the child forks successfully, the child can run the program and execute the good boy's command:
+```
+execve(path, argv[0], environ)
+```
+This replaces the child with the program for the path the good boy wants the shell to use (does this mean the shell is the obedient little good boy???)
+
+The parent must wait for the child to finish its tasks and the exit status of the PID will be checked and if the child exits normally then the status is returned with its exit code.
+
+The child is now free to ***die***
+
+### Upon the death of a child
+The parent process starts up again, looping back round to the start of the infinite loop
+
+The shell can be exitted if the good boy so pleases, by typing the builtin command
+```
+(good_boy$)  exit
+```
+And thats all i have to say about that.
+
+## Acknowledgements
+Code written (wrote???) by Sam Thompson and Zac Malkoun under expert supervision of a rubber duck and Monsieur Jonathan Clus, merci beaucoup mon ami!
+
+Also thank you to another Monsieur Thomas Yamini who has returned back to the land of croissants and smelly cheeses, gbnf.
+
+Pull requests are allowed on the condition that you hide the comment "Mo Salah Egyptian King" somewhere.
+
+Ok thank you byyeeeee
