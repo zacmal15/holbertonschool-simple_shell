@@ -1,4 +1,4 @@
-SIMPLE_SHELL(1)               User Commands              SIMPLE_SHELL(1)
+SIMPLE_SHELL(1)    User Commands    SIMPLE_SHELL(1)
 
 NAME
 hsh - simple UNIX command interpreter
@@ -10,13 +10,12 @@ DESCRIPTION
 hsh is a simple UNIX command line interpreter that reads commands
 from standard input and executes them.
 
-```
 The shell operates in two modes:
 - Interactive mode: displays a prompt and waits for user input.
 - Non-interactive mode: reads commands from a pipe or file.
 
 In interactive mode, the shell displays the prompt:
-    (good_boy$)
+(good_boy$)
 
 Each command entered is executed using fork() and execve().
 
@@ -24,49 +23,42 @@ The shell handles:
 - Execution of programs using full path
 - Commands with arguments
 - Built-in commands
-```
 
 BUILT-IN COMMANDS
 exit
 Exits the shell.
 
-```
 env
     Prints the current environment variables.
-```
 
 COMMAND EXECUTION
 The shell parses user input into tokens and executes commands
 using execve().
 
-```
 Only full path commands are supported (e.g. /bin/ls).
 
 If a command is not found, an error message is displayed.
-```
 
 EXAMPLES
 Interactive mode:
-$ ./hsh
-(good_boy$) /bin/ls
-file1 file2 file3
-(good_boy$) exit
+	$ ./hsh
+	(good_boy$) /bin/ls
+	file1 file2 file3
+	(good_boy$) exit
 
-```
 Non-interactive mode:
-    $ echo "/bin/ls" | ./hsh
-    file1 file2 file3
+	$ echo "/bin/ls" | ./hsh
+	file1 file2 file3
 
 Using arguments:
     (good_boy$) /bin/ls /tmp
-```
 
 RETURN VALUE
 The shell exits with the status of the last executed command.
 
 AUTHORS
 Zac Unknown
-Partner Name
+Sam Thompson
 
 SEE ALSO
 sh(1), execve(2), fork(2), wait(2)
