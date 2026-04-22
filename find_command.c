@@ -8,10 +8,10 @@
 
 char *get_path(void)
 {
-	int i;
+	int i = 0;
 
 	/* search environment for PATH, returns where the directories are */
-	for (i = 0; environ[i]; i++)
+	while (environ[i])
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
 			return (environ[i] + 5); /* location of dirs after colon */
@@ -50,7 +50,7 @@ char *find_command(char *comm)
 	while (dir)
 	{
 		full_path = malloc(strlen(dir) + strlen(comm) + 2);
-		/* add 2 for null terminator */
+		/* add 2 for null terminator and the forward slash */
 		if (!full_path)
 		{
 			free(copy);
