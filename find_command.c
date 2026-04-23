@@ -15,6 +15,7 @@ char *get_path(void)
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
 			return (environ[i] + 5); /* location of dirs after colon */
+		i++;
 	}
 	return (NULL);
 }
