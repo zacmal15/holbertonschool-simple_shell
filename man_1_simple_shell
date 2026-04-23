@@ -1,8 +1,8 @@
 .\" Man page for simple shell
-.TH "SIMPLE_SHELL(1)    User Commands    SIMPLE_SHELL(1)"
+.TH SIMPLE_SHELL 1 "User Commands" "man_1_simple_shell"
 
 .SH NAME
-hsh - simple UNIX command interpreter
+hsh \- simple UNIX command interpreter
 
 .SH SYNOPSIS
 ./hsh
@@ -27,10 +27,12 @@ The shell handles:
 
 .SH BUILT-IN COMMANDS
 exit
+.br
 	Exits the shell.
 
 env
-    Prints the current environment variables.
+.br
+	Prints the current environment variables.
 
 .SH COMMAND EXECUTION
 The shell parses user input into tokens and executes commands
@@ -42,14 +44,20 @@ If a command is not found, an error message is displayed.
 
 .SH EXAMPLES
 Interactive mode:
-	$ ./hsh
-	(good_boy$) /bin/ls
-	file1 file2 file3
-	(good_boy$) exit
+.br 
+$ ./hsh
+.br 
+(good_boy$) /bin/ls
+.br 
+file1 file2 file3
+.br 
+(good_boy$) exit
 
 Non-interactive mode:
-	$ echo "/bin/ls" | ./hsh
-	file1 file2 file3
+.br 
+$ echo "/bin/ls" | ./hsh
+.br 
+file1 file2 file3
 
 Using arguments:
     (good_boy$) /bin/ls /tmp
@@ -59,11 +67,13 @@ The shell exits with the status of the last executed command.
 
 .SH AUTHORS
 Zac Malkoun
+.br
 Sam Thompson
 
 .SH SEE ALSO
-sh(1), execve(2), fork(2), wait(2)
+sh(1), execve(2), fork(2), wait(2), fflush(3), getline(3), waitpid(3), isatty(3), sprintf(3), fprintf(3)
 
 .SH NOTES
 - The shell does not handle PATH resolution (unless implemented).
+.br
 - The shell does not support pipes, redirection, or advanced features.
